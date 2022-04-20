@@ -60,7 +60,9 @@ import unnamed from "../../EXP/Revista_digital_Sur_de_Merida-web-resources/image
 import LinkEsquina from '../components/link-esquina';
 import ImageHover, { ImageGlass } from '../components/image-hover';
 import VideoComponent from '../components/video-component';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+
+import useKeyPress from '../components/key-press'
 
 export default function MyBook(props) {
   const flip = useRef();
@@ -70,8 +72,25 @@ export default function MyBook(props) {
     cp[index] = index;
   }
 
+  const lPressed = useKeyPress('ArrowLeft');
+  const rPressed = useKeyPress('ArrowRight');
+
+  useEffect(() => {
+    if(lPressed){
+      flip.current.pageFlip().flipPrev()
+    }
+    if(rPressed){
+      flip.current.pageFlip().flipNext()
+    }
+  }, [lPressed, rPressed])
+   
   return (
     <div style={{ position: "fixed", display: "flex", flexDirection: "column", top: 0, left: 0, bottom: 0, right: 0, alignItems: "center", justifyContent: "center", maxWidth: "90%" }}>
+
+      <Head>
+        <title>Revista El Sur De Mérida Te Espera</title>
+      </Head>
+
       <h1>Revista El Sur De Mérida Te Espera</h1>
       <div className='buttons'>
         <button onClick={(e) => {
@@ -95,7 +114,7 @@ export default function MyBook(props) {
           Final
         </button>
       </div>
-      <HTMLFlipBook ref={flip} width={640} height={512} showCover={true} mobileScrollSupport={false}>
+      <HTMLFlipBook ref={flip} width={640} height={512} showCover={true} mobileScrollSupport={false} >
 
         <div className="demoPage"><Image src={p1} /></div>
         <div className="demoPage"><Image src={p2} /></div>
@@ -272,9 +291,9 @@ export default function MyBook(props) {
 
       <div className='pageList'>
         <ul>
-          {cp.map(item => <li><button onClick={(e) => {
+          {cp.map(item => <li key={item*9}><button onClick={(e) => {
             flip.current.pageFlip().flip(item)
-          }}>{(item+1)}</button></li>)}
+          }}>{(item + 1)}</button></li>)}
         </ul>
       </div>
     </div>
