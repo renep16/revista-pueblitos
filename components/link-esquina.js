@@ -11,6 +11,7 @@ const LinkEsquina = ({link}) => {
     }}
       href={link}
       target={"_blank"}
+      rel="noreferrer"
     >
 
     </a>
